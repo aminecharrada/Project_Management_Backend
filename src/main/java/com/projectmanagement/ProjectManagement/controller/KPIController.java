@@ -20,5 +20,9 @@ public class KPIController {
     public Map<String, Double> getRespectDesDelais(@PathVariable Long projectId) {
         return kpiService.calculateRespectDesDelaisPerDate(projectId);
     }
+    @GetMapping("/project/{projectId}/daily-progress")
+    public Map<String, Double> getDailyProgress(@PathVariable Long projectId) {
+        return kpiService.calculateDailyProgress(projectId);
+    }
 }
 
