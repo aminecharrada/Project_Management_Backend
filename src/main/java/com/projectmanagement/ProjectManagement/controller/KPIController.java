@@ -31,6 +31,11 @@ public class KPIController {
         Map<String, Double> dailyProductivity = kpiService.calculateDailyProductivity(projectId);
         return ResponseEntity.ok(dailyProductivity);
     }
+    @GetMapping("/project/{projectId}/ecart")
+    public ResponseEntity<Map<String, Double>> getEcartDureeByProject(@PathVariable Long projectId) {
+        Map<String, Double> ecartDuree = kpiService.calculateEcartDureeForProject(projectId);
+        return ResponseEntity.ok(ecartDuree);
+    }
 
 }
 

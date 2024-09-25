@@ -133,6 +133,29 @@ public class KPIService {
 
         return dailyProductivity;  // Map of date -> total productivity for the date
     }
+    public Map<String, Double> calculateEcartDureeForProject(Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NoSuchElementException("Project not found with id " + projectId));
+
+        List<Task> tasks = project.getTasks();
+
+        // Log the number of tasks found
+        System.out.println("Found " + tasks.size() + " tasks for project id " + projectId);
+
+        // Prepare a map to hold the results
+        Map<String, Double> ecartDureeMap = new HashMap<>();
+
+        for (Task task : tasks) {
+            if (task.getDuration() != null && task.getDuration() > 0) {
+                double ecartDuree = (task.getDureeReelle().getTime() - task.getDuration()) / (double) task.getDuration();
+                ecartDureeMap.put(task.getText(), ecartDuree);
+            }
+        }
+
+        return ecartDureeMap;
+    }
+
+
 
 
 }

@@ -20,5 +20,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findByPoleName(@Param("poleName") String poleName);
 //    @Query("SELECT t FROM Task t WHERE t.pole.id = :poleId")
 //    List<Task> findByPoleId(@Param("poleId") Long poleId);
+    @Query("SELECT t FROM Task t WHERE t.dureeReelle < CURRENT_DATE AND t.progress < 1")
+    List<Task> findOverdueTasks();
+
 
 }

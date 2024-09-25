@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.Set;
 
 @Data
@@ -24,6 +25,9 @@ public class Task {
     private String start_date;
     private Float progress;
     private Integer duration;
+
+    @Temporal(TemporalType.DATE)
+    private Date dureeReelle;
     private Integer parent;
     private String poleName;
 
@@ -39,6 +43,7 @@ public class Task {
     @JoinColumn(name = "project_id")
     @JsonIgnore
     private Project project;
+
 
     @Override
     public String toString() {

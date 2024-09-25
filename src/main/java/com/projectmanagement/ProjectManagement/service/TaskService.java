@@ -10,6 +10,7 @@
     import com.projectmanagement.ProjectManagement.repository.TaskRepository;
 
     import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.scheduling.annotation.Scheduled;
     import org.springframework.stereotype.Service;
     import java.util.*;
     import java.util.stream.Collectors;
@@ -47,6 +48,7 @@
             task.setDuration(taskDto.getDuration());
             task.setParent(taskDto.getParent());
             task.setPoleName(taskDto.getPoleName());
+            task.setDureeReelle(new Date());
 
             if (taskDto.getPersonnes() != null && !taskDto.getPersonnes().isEmpty()) {
                 Set<Long> personnesIds = taskDto.getPersonnes();
@@ -150,7 +152,19 @@
 
             task.setRessource(ressourceNames);
         }
+        @Scheduled(cron = "0 0 0 * * ?") // This runs daily at midnight
+        public void updateOverdueTasks() {
+            List<Task> overdueTasks = taskRepository.findOverdueTasks();
+            Date today = new Date();
 
+            for (Task task : overdueTasks) {
+                // Only update dureeReelle if the task is not completed
+                if (task.getProgress() < 1) { // Assuming progress 1 indicates completion
+                    task.setDureeReelle(today); // Update to current date
+                    taskRepository.save(task);
+                }
+            }
+        }
         public void deleteTask(Long id) {
             Task task = taskRepository.findById(id)
                     .orElseThrow(() -> new NoSuchElementException("Task not found with id " + id));
