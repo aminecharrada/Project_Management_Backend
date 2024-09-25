@@ -92,4 +92,47 @@ public class KPIService {
 
         return dailyProgress;
     }
+    public Map<String, Double> calculateDailyProductivity(Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+
+        List<Task> tasks = project.getTasks();
+        Map<String, Double> dailyProductivity = new HashMap<>();
+
+        LocalDate startDate = tasks.stream()
+                .map(Task::getStart_date)
+                .map(date -> LocalDate.parse(date.split(" ")[0], DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .min(LocalDate::compareTo)
+                .orElse(LocalDate.now());
+
+        LocalDate endDate = tasks.stream()
+                .map(Task::getStart_date)
+                .map(date -> LocalDate.parse(date.split(" ")[0], DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .max(LocalDate::compareTo)
+                .orElse(LocalDate.now());
+
+        // Iterate through each date in the project duration
+        for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
+            double totalProductivityForDate = 0.0;
+
+            for (Task task : tasks) {
+                LocalDate taskStartDate = LocalDate.parse(task.getStart_date().split(" ")[0], DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                LocalDate taskEndDate = taskStartDate.plusDays(task.getDuration());
+
+                // If the task is ongoing on the current date
+                if (!date.isBefore(taskStartDate) && !date.isAfter(taskEndDate)) {
+                    // Calculate the productivity for the task on the given day
+                    double productivity = 1.0 * (task.getProgress() * 100);  // 1 day * % of task completion
+                    totalProductivityForDate += productivity;
+                }
+            }
+
+            // Add the total productivity for the date
+            dailyProductivity.put(date.toString(), totalProductivityForDate);
+        }
+
+        return dailyProductivity;  // Map of date -> total productivity for the date
+    }
+
+
 }
