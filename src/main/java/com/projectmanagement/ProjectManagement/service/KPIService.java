@@ -133,26 +133,46 @@ public class KPIService {
 
         return dailyProductivity;  // Map of date -> total productivity for the date
     }
-    public Map<String, Double> calculateEcartDureeForProject(Long projectId) {
+    public Map<String, Double> calculateEcartDureePerDate(Long projectId) {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new NoSuchElementException("Project not found with id " + projectId));
+                .orElseThrow(() -> new RuntimeException("Project not found with id " + projectId));
 
         List<Task> tasks = project.getTasks();
+        if (tasks.isEmpty()) {
+            return Collections.emptyMap(); // Return empty if no tasks exist
+        }
 
-        // Log the number of tasks found
-        System.out.println("Found " + tasks.size() + " tasks for project id " + projectId);
+        // Group tasks by their start date
+        Map<String, List<Task>> tasksByDate = tasks.stream()
+                .collect(Collectors.groupingBy(task -> task.getStart_date().split(" ")[0])); // Group by the date part
 
-        // Prepare a map to hold the results
-        Map<String, Double> ecartDureeMap = new HashMap<>();
+        // Create a map to store Ecart de durée for each date
+        Map<String, Double> ecartDureePerDate = new HashMap<>();
 
-        for (Task task : tasks) {
-            if (task.getDuration() != null && task.getDuration() > 0) {
-                double ecartDuree = (task.getDureeReelle().getTime() - task.getDuration()) / (double) task.getDuration();
-                ecartDureeMap.put(task.getText(), ecartDuree);
+        for (Map.Entry<String, List<Task>> entry : tasksByDate.entrySet()) {
+            String date = entry.getKey();
+            List<Task> tasksForDate = entry.getValue();
+
+            // Calculate the total ecart duree for all tasks on this date
+            double totalEcart = 0;
+            int count = 0;
+
+            for (Task task : tasksForDate) {
+                if (task.getDuration() != null && task.getDureeReelle() != null && task.getDuration() > 0) {
+                    double ecartDuree = (task.getDureeReelle().getTime() - task.getDuration()) / (double) task.getDuration();
+                    totalEcart += ecartDuree;
+                    count++;
+                }
+            }
+
+            // Calculate average Ecart de durée for the date
+            if (count > 0) {
+                double averageEcart = totalEcart / count;
+                ecartDureePerDate.put(date, averageEcart);
             }
         }
 
-        return ecartDureeMap;
+        return ecartDureePerDate; // Map of date -> ecart duree
     }
 
 
