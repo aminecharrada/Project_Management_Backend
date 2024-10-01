@@ -23,5 +23,12 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query("SELECT t FROM Task t WHERE t.dureeReelle < CURRENT_DATE AND t.progress < 1")
     List<Task> findOverdueTasks();
 
+    // Find tasks for a project with progress equal to 1 (completed)
+    @Query("SELECT t FROM Task t WHERE t.project.id = :projectId AND t.progress = 1")
+    List<Task> findCompletedTasksByProject(Long projectId);
+
+    // Find tasks for a project with progress less than 1 (not completed)
+    @Query("SELECT t FROM Task t WHERE t.project.id = :projectId AND t.progress < 1")
+    List<Task> findIncompleteTasksByProject(Long projectId);
 
 }

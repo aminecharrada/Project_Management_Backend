@@ -8,7 +8,9 @@
     import org.springframework.http.ResponseEntity;
     import org.springframework.web.bind.annotation.*;
 
+    import java.util.HashMap;
     import java.util.List;
+    import java.util.Map;
 
     @RestController
     @AllArgsConstructor
@@ -53,5 +55,16 @@
         public ResponseEntity<List<Task>> getAllTasks() {
             List<Task> tasks = taskService.findAll();
             return ResponseEntity.ok(tasks);
+        }
+        @GetMapping("/{projectId}/tasks-status")
+        public ResponseEntity<Map<String, Integer>> getTaskStatus(@PathVariable Long projectId) {
+            List<Task> completedTasks = taskService.getCompletedTasks(projectId);
+            List<Task> incompleteTasks = taskService.getIncompleteTasks(projectId);
+
+            Map<String, Integer> taskStatus = new HashMap<>();
+            taskStatus.put("completed", completedTasks.size());
+            taskStatus.put("incomplete", incompleteTasks.size());
+
+            return ResponseEntity.ok(taskStatus);
         }
     }

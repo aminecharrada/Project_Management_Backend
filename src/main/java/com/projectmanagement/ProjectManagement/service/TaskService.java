@@ -165,6 +165,12 @@
                 }
             }
         }
+        public List<Task> getCompletedTasks(Long projectId) {
+            return taskRepository.findCompletedTasksByProject(projectId);
+        }
+        public List<Task> getIncompleteTasks(Long projectId) {
+            return taskRepository.findIncompleteTasksByProject(projectId);
+        }
         public void deleteTask(Long id) {
             Task task = taskRepository.findById(id)
                     .orElseThrow(() -> new NoSuchElementException("Task not found with id " + id));
