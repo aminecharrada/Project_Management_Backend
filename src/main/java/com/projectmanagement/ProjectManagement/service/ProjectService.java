@@ -40,21 +40,40 @@ public class ProjectService {
     }
 
 
-        public Project createProject(ProjectDto projectDto) {
-            Project project = new Project();
-            project.setTitle(projectDto.getTitle());
-            project.setDescription(projectDto.getDescription());
-            project.setProgress(0.0); // Set progress to 0 initially
-            project.setRetardPercent(0.0); // Set retardPercent to 0 initially
+    public Project createProject(ProjectDto projectDto) {
+        Project project = new Project();
+        project.setTitle(projectDto.getTitle());
+        project.setDescription(projectDto.getDescription());
+        project.setProgress(0.0); // Set progress to 0 initially
 
-            // Fetch the selected person from the database
-            Personne responsable = personneService.getPersonneById(projectDto.getResponsableId());
-            if (responsable != null) {
-                project.setResponsableName(responsable.getName());
-                project.setResponsableImage(responsable.getImage());
-            }
+        // Set start and end dates from projectDto
+        project.setStartDate(projectDto.getStartDate());
+        project.setEndDate(projectDto.getEndDate());
 
+        // Fetch the selected person from the database
+        Personne responsable = personneService.getPersonneById(projectDto.getResponsableId());
+        if (responsable != null) {
+            project.setResponsableName(responsable.getName());
+            project.setResponsableImage(responsable.getImage());
+        }
+
+        // Calculate and set the retard percent only if start and end dates are set
+        if (project.getStartDate() != null && project.getEndDate() != null) {
+            project.setRetardPercent(project.calculateRetardPercent());
+        }
+
+        return projectRepository.save(project);
+    }
+
+    public Project updateProjectProgress(Long projectId, double newProgress) {
+        Project project = projectRepository.findById(projectId).orElse(null);
+        if (project != null) {
+            project.setProgress(newProgress); // This will also update retardPercent automatically
             return projectRepository.save(project);
         }
+        return null;
+    }
+
+
 
 }

@@ -36,8 +36,12 @@ public class ProjectController {
     @GetMapping("/{id}")
     public ResponseEntity<Project> getProjectById(@PathVariable Long id) {
         Project project = projectService.getProjectById(id);
+        if (project != null) {
+            project.setRetardPercent(project.calculateRetardPercent());
+        }
         return ResponseEntity.ok(project);
     }
+
 
     @PostMapping
     public ResponseEntity<?> createProject(@RequestBody ProjectDto projectDto) {
@@ -51,10 +55,13 @@ public class ProjectController {
         newProject.setDescription(projectDto.getDescription());
         newProject.setProgress(projectDto.getProgress());
         newProject.setRetardPercent(projectDto.getRetardPercent());
+        newProject.setStartDate(projectDto.getStartDate());
+        newProject.setEndDate(projectDto.getEndDate());
         newProject.setResponsableName(responsable.getName());
         newProject.setResponsableImage(responsable.getImage());
 
         projectRepository.save(newProject);
         return ResponseEntity.ok(newProject);
     }
+
 }
