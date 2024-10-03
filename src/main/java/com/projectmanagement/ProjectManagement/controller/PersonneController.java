@@ -21,7 +21,8 @@ import java.util.logging.Logger;
 @RestController
 @RequestMapping("/api/personnes")
 public class PersonneController {
-    private static final String UPLOAD_DIR = "C:/Users/amine/Downloads/ProjectManagement/ProjectManagement/src/main/resources/uploads/";
+    private static final String UPLOAD_DIR = "C:/Users/amine/OneDrive/Bureau/charrada/Stage d'été Gestion de projet/BackendProjectMngmt/ProjectManagement/src/main/resources/uploads/";
+
     private static final Logger LOGGER = Logger.getLogger(PersonneController.class.getName());
 
     @Autowired
