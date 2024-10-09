@@ -67,4 +67,17 @@
 
             return ResponseEntity.ok(taskStatus);
         }
+        @GetMapping("/tasks/person/{name}/details")
+        public ResponseEntity<Map<String, Object>> getTasksDetailsByPerson(@PathVariable String name) {
+            Long count = taskService.countTasksByPersonName(name);
+            List<String> taskNames = taskService.getAllTaskNamesByPersonName(name);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("totalTasks", count);
+            response.put("taskNames", taskNames);
+
+            return ResponseEntity.ok(response);
+        }
+
+
     }

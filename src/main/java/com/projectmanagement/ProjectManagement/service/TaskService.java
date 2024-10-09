@@ -121,6 +121,25 @@
 
                 return updatedTask;
             }
+            public Map<String, Object> getTasksDetailsByPersonName(String personName) {
+                Long count = countTasksByPersonName(personName);
+                List<String> taskNames = getAllTaskNamesByPersonName(personName);
+
+                Map<String, Object> response = new HashMap<>();
+                response.put("totalTasks", count);
+                response.put("taskNames", taskNames);
+
+                return response;
+            }
+
+            public List<String> getAllTaskNamesByPersonName(String personName) {
+                return taskRepository.findAllTaskNamesByPersonName(personName);
+            }
+
+            public Long countTasksByPersonName(String personName) {
+                return taskRepository.countTasksByPersonName(personName);
+            }
+
 
 
             private void updateProjectProgress(Project project) {

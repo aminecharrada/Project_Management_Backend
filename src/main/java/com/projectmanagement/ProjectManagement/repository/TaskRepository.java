@@ -31,4 +31,10 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query("SELECT t FROM Task t WHERE t.project.id = :projectId AND t.progress < 1")
     List<Task> findIncompleteTasksByProject(Long projectId);
 
+    @Query("SELECT t.text FROM Task t WHERE LOWER(t.ressource) = LOWER(:name)")
+    List<String> findAllTaskNamesByPersonName(@Param("name") String name);
+
+    @Query("SELECT COUNT(t) FROM Task t WHERE LOWER(t.ressource) = LOWER(:name)")
+    Long countTasksByPersonName(@Param("name") String name);
+
 }
