@@ -117,10 +117,14 @@
                 updatePoleProgress(updatedTask.getPoleName());
 
                 // Recalculate project progress
+
                 updateProjectProgress(task.getProject());
+
+
 
                 return updatedTask;
             }
+
             public Map<String, Object> getTasksDetailsByPersonName(String personName) {
                 Long count = countTasksByPersonName(personName);
                 List<String> taskNames = getAllTaskNamesByPersonName(personName);

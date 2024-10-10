@@ -4,17 +4,15 @@ import com.projectmanagement.ProjectManagement.entity.Personne;
 import com.projectmanagement.ProjectManagement.entity.Project;
 import com.projectmanagement.ProjectManagement.repository.PoleRepository;
 import com.projectmanagement.ProjectManagement.repository.ProjectRepository;
-//import com.projectmanagement.ProjectManagement.repository.SubTaskRepository;
 import com.projectmanagement.ProjectManagement.repository.TaskRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-//import com.projectmanagement.ProjectManagement.entity.SubTask;
 @Service
 public class ProjectService {
+
 
     @Autowired
     private final ProjectRepository projectRepository;
@@ -73,6 +71,7 @@ public class ProjectService {
         }
         return null;
     }
+
 
 
 

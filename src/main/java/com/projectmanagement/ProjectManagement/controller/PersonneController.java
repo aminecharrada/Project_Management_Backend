@@ -30,13 +30,13 @@ public class PersonneController {
 
     @GetMapping
     public List<Personne> getAllPersonnes() {
-        LOGGER.info("Fetching all personnes");
+
         return personneService.getAllPersonnes();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Personne> getPersonneById(@PathVariable Long id) {
-        LOGGER.info("Fetching personne by id: " + id);
+
         Personne personne = personneService.getPersonneById(id);
         if (personne != null) {
             return ResponseEntity.ok(personne);
@@ -104,11 +104,11 @@ public class PersonneController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePersonne(@PathVariable Long id) {
-        LOGGER.info("Deleting Personne: " + id);
+
         Personne personne = personneService.getPersonneById(id);
         if (personne != null) {
             personneService.deletePersonne(id);
-            LOGGER.info("Personne deleted with id: " + id);
+
             return ResponseEntity.noContent().build();
         } else {
             LOGGER.warning("Personne not found with id: " + id);
@@ -117,7 +117,7 @@ public class PersonneController {
     }
     @PostMapping("/delete-multiple")
     public ResponseEntity<Void> deleteMultiplePersonnes(@RequestBody List<Long> ids) {
-        LOGGER.info("Deleting multiple personnes: " + ids);
+
         personneService.deleteMultiplePersonnes(ids);
         return ResponseEntity.noContent().build();
     }

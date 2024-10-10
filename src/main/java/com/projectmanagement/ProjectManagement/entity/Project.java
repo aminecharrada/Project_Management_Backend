@@ -54,8 +54,6 @@
 
         public void setProgress(double progress) {
             this.progress = progress;
-
-            // Automatically update retardPercent when progress changes
             this.retardPercent = calculateRetardPercent();
         }
 
@@ -84,15 +82,13 @@
             // Calculate expected progress based on days passed
             double expectedProgress = (double) daysPassed / totalDays * 100;
 
-            // If actual progress is less than expected, calculate the retard percentage
+
             if (progress < expectedProgress) {
                 return ((expectedProgress - progress) / expectedProgress) * 100;
             }
 
-            return 0.0; // No delay if progress is on track
+            return 0.0;
         }
-
-
 
 
         // Getter and setter for retardPercent

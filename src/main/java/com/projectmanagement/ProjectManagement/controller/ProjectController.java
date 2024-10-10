@@ -38,6 +38,7 @@ public class ProjectController {
         Project project = projectService.getProjectById(id);
         if (project != null) {
             project.setRetardPercent(project.calculateRetardPercent());
+
         }
         return ResponseEntity.ok(project);
     }
